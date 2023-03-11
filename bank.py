@@ -53,7 +53,7 @@ class SignUp(QWidget):
 class Bank(QMainWindow):
     def __init__(self):
         super(Bank, self).__init__()
-        loadUi('Bank.ui', self)
+        loadUi('main.ui', self)
         self.hide_error()
         self.signin.clicked.connect(self.check_login)
         self.class_signup = SignUp()
