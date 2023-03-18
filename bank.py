@@ -13,7 +13,12 @@ class StartDB:
             password VARCHAR(255) NOT NULL,
             email VARCHAR(255) NOT NULL UNIQUE,
             created VARCHAR(100),
-            balance INT
+            balance INT, 
+            communalka_water INTEGER DEFAULT 34000,
+            communalka_gas INTEGER DEFAULT 34000, 
+            communalka_electricity INTEGER DEFAULT 34000, 
+            communalka_internet INTEGER DEFAULT 34000, 
+            communalka_trashnyak INTEGER DEFAULT 34000
             );
         """)
         self.connect.commit()
@@ -165,13 +170,16 @@ class Personal(QWidget):
         
         cursor = self.db.connect.cursor()
         cursor.execute(f"SELECT balance FROM users WHERE login = '{login}';")
-        balance = cursor.fetchall()[0][0]
-#         if balance >= int(amount):
-#             cursor.execute(f"UPDATE users SET communalka_water = communalka_water - '{amount}' WHERE login = '{login}';")
-#             self.db.connect.commit()
-#             self.result_2.setText("Успешно оплачено")
-#         else:
-#             self.result_2.setText("Недостаточно средств для оплаты")
+        result = cursor.fetchall()
+        if result != []:
+            cursor.execute(f"SELECT balance FROM users WHERE login = '{self.login}';")
+            users_balance = cursor.fetchall()[0][0]
+            print(users_balance)
+            cursor.execute(f"UPDATE users SET communalka_water = communalka_water - '{amount}' WHERE login = '{login}';")
+            self.db.connect.commit()
+            self.result_2.setText("Успешно оплачено")
+        else:
+            self.result_2.setText("Недостаточно средств для оплаты")
 
 
 
@@ -210,7 +218,7 @@ class Bank(QMainWindow):
         else:
             self.show_error()
             self.error.setText("Неправильные данные")
-            
+
 
 # class Payment(QWidget):
 #     def __init__(self):
